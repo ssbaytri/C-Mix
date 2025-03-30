@@ -1,1 +1,1 @@
-# Snake-Game-C
+# Mixed C Projects
