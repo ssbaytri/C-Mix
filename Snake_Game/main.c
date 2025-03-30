@@ -9,6 +9,8 @@ int main()
 	int quit = 0;
 	while (!quit)
 	{
+		// hide the cursor
+		printf("\e[?25l");
 		// draw the maze
 		printf("┌");
 		for (int i = 0; i < COLS; i++)
@@ -26,6 +28,7 @@ int main()
 			printf("─");
 		printf("┘\n");
 
+		// move the cursor to the top
 		printf("\e[%iA", ROWS + 2);
 	}
 	return 0;
