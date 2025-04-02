@@ -9,6 +9,7 @@ typedef struct
 } vec2;
 
 int score = 0;
+vec2 segments[256];
 
 int main()
 {
@@ -56,6 +57,10 @@ int main()
 		if (pressed == '\e')
 			break;
 
+		for (int i = score; i > 0; i--)
+			segments[i] = segments[i - 1];
+		segments[0] = head;
+
 		head.x += dir.x;
 		head.y += dir.y;
 
@@ -68,6 +73,8 @@ int main()
 
 		erase();
 		mvaddch(food.y, food.x * 2, '@');
+		for (int i = 0; i < score; i++)
+			mvaddch(segments[i].y, segments[i].x * 2, 'o');
 		mvaddch(head.y, head.x * 2, 'O');
 		usleep(125000);
 	}
