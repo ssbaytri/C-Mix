@@ -118,5 +118,5 @@ Screen size can be modified in `src/init.c` by changing the `sw` and `sh` values
 
 ## Acknowledgments
 
-- Inspired by the classic Nokia Snake game
+- Inspired by the classic Snake game
 - Built with ncurses, a powerful terminal manipulation library
