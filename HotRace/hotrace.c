@@ -1,57 +1,88 @@
 #include "hotrace.h"
-
-void	free_table(t_pair *table[])
-{
-	int i;
-
-	for (i = 0; i < TABLE_SIZE; i++)
-	{
-		if (table[i])
-			free(table[i]);
-	}
+#include <sys/time.h>
+unsigned long hash_function(const char *str) {
+    unsigned long hash = 5381;
+    int c;
+    
+    while ((c = *str++))
+        hash = ((hash << 5) + hash) + c;
+    return hash % HASH_SIZE;
 }
 
-unsigned long hash_function(char *str)
-{
-	unsigned long hash;
-	int c;
-	
-	hash = 5381;
-	c = 0;
-	while (str[c])
-	{
-		hash = ((hash << 5) + hash) + str[c];
-		c++;
-	}
-	printf("hash value: %lu\n", hash);
-	printf("hash index %lu\n", hash % TABLE_SIZE);
-	return (hash % TABLE_SIZE);
+t_hash_table *create_hash_table() {
+    t_hash_table *ht = malloc(sizeof(t_hash_table));
+    if (!ht) return NULL;
+    
+    ht->size = HASH_SIZE;
+    ht->entries = calloc(HASH_SIZE, sizeof(t_entry *));
+    if (!ht->entries) {
+        free(ht);
+        return NULL;
+    }
+    return ht;
 }
 
-void	insert(t_pair *table[], char *key, char *value)
-{
-	unsigned long index;
-	t_pair *new_pair;
-
-	index = hash_function(key);
-	new_pair = malloc(sizeof(t_pair));
-	if (!new_pair)
-		return;
-	new_pair->key = key;
-	new_pair->value = value;
-	table[index] = new_pair;
+void insert(t_hash_table *ht, const char *key, const char *value) {
+    unsigned long index = hash_function(key);
+    t_entry *entry = malloc(sizeof(t_entry));
+    if (!entry) return;
+    
+    entry->key = strdup(key);
+    entry->value = strdup(value);
+    entry->next = ht->entries[index];
+    ht->entries[index] = entry;
 }
 
-t_pair *search(t_pair *table[], char *key)
-{
-	unsigned long index;
+const char *search(t_hash_table *ht, const char *key) {
+    unsigned long index = hash_function(key);
+    t_entry *entry = ht->entries[index];
+    
+    while (entry) {
+        if (strcmp(entry->key, key) == 0)
+            return entry->value;
+        entry = entry->next;
+    }
+    return NULL;
+}
 
-	index = hash_function(key);
-	printf("index: %lu\n", index);
-	printf("hash: %lu\n", hash_function(key));
-	if (table[index] && strcmp(table[index]->key, key) == 0)
-		return (table[index]);
-	return (NULL);
+void free_hash_table(t_hash_table *ht) {
+    for (size_t i = 0; i < ht->size; i++) {
+        t_entry *entry = ht->entries[i];
+        while (entry) {
+            t_entry *next = entry->next;
+            free(entry->key);
+            free(entry->value);
+            free(entry);
+            entry = next;
+        }
+    }
+    free(ht->entries);
+    free(ht);
+}
+
+int read_line(char *buffer, int size) {
+    int i = 0;
+    char c;
+    
+    while (i < size - 1 && read(0, &c, 1) > 0 && c != '\n')
+        buffer[i++] = c;
+    buffer[i] = '\0';
+    return i;
+}
+
+void print_hash_table(t_hash_table *ht) {
+    if (!ht) return;
+    
+    for (size_t i = 0; i < ht->size; i++) {
+        t_entry *entry = ht->entries[i];
+        if (entry) {
+            printf("Bucket %zu:\n", i);
+            while (entry) {
+                printf("  %s => %s\n", entry->key, entry->value);
+                entry = entry->next;
+            }
+        }
+    }
 }
 
 void	ll()
@@ -59,28 +90,34 @@ void	ll()
 	system("leaks -q hotrace");
 }
 
-int	main(int ac, char **av)
-{
+int main(void) {
+	// Register the leak checker function
 	atexit(ll);
-	t_pair *table[TABLE_SIZE];
-	(void)av;
-	if (ac != 1)
-	{
-		write(2, "Usage: ./hotrace\n", 17);
-		return (1);
-	}
-	insert(table, "key1", "value1");
-	insert(table, "key2", "value2");
-	insert(table, "key3", "value3");
-	insert(table, "key4", "value4");
-	insert(table, "key5", "value5");
+    t_hash_table *ht = create_hash_table();
+    if (!ht) return 1;
 
-	t_pair *result = search(table, "key1");
-	if (result)
-		printf("Found: %s -> %s\n", result->key, result->value);
-	else
-		printf("Not found\n");
+    char key[BUFFER_SIZE];
+    char value[BUFFER_SIZE];
+    
+    // Read key-value pairs
+    while (1) {
+        if (read_line(key, sizeof(key)) == 0) break;
+        if (read_line(value, sizeof(value)) == 0) break;
+        insert(ht, key, value);
+    }
 
-	free_table(table);
-	return (0);
+    // Process search queries
+    while (read_line(key, sizeof(key)) > 0) {
+        const char *result = search(ht, key);
+        if (result)
+            write(1, result, strlen(result));
+        else {
+            write(1, key, strlen(key));
+            write(1, " Not found.\n", 12);
+        }
+        write(1, "\n", 1);
+    }
+	print_hash_table(ht);
+    free_hash_table(ht);
+    return 0;
 }
