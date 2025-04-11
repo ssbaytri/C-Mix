@@ -91,7 +91,10 @@ void	ll()
 }
 
 int main(void) {
-	// Register the leak checker function
+	struct timeval start, end;
+	double elapsed_time_sec;
+	long elapsed_time_usec;
+	gettimeofday(&start, NULL);
 	atexit(ll);
     t_hash_table *ht = create_hash_table();
     if (!ht) return 1;
@@ -119,5 +122,13 @@ int main(void) {
     }
 	print_hash_table(ht);
     free_hash_table(ht);
+	gettimeofday(&end, NULL);
+	elapsed_time_sec = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
+	elapsed_time_usec = end.tv_usec - start.tv_usec;
+	if (elapsed_time_usec < 0) {
+		elapsed_time_sec--;
+		elapsed_time_usec += 1000000;
+	}
+	printf("Execution time: %.6f seconds and %ld microseconds\n", elapsed_time_sec, elapsed_time_usec);
     return 0;
 }
