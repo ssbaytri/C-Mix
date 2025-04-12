@@ -3,7 +3,7 @@ NAME=hotrace
 CC=cc
 CFLAGS=-Wall -Wextra -Werror
 
-SRCS = hotrace.c
+SRCS = another.c
 OBJS = $(SRCS:.c=.o)
 
 HEADER = hotrace.h

@@ -33,7 +33,7 @@ void insert(t_hash_table *ht, const char *key, const char *value) {
     ht->entries[index] = entry;
 }
 
-const char *search(t_hash_table *ht, const char *key) {
+char *search(t_hash_table *ht, const char *key) {
     unsigned long index = hash_function(key);
     t_entry *entry = ht->entries[index];
     
@@ -85,17 +85,17 @@ void print_hash_table(t_hash_table *ht) {
     }
 }
 
-void	ll()
-{
-	system("leaks -q hotrace");
-}
+// void	ll()
+// {
+// 	system("leaks -q hotrace");
+// }
 
 int main(void) {
+	// atexit(ll);
 	struct timeval start, end;
 	double elapsed_time_sec;
 	long elapsed_time_usec;
 	gettimeofday(&start, NULL);
-	atexit(ll);
     t_hash_table *ht = create_hash_table();
     if (!ht) return 1;
 
@@ -108,6 +108,8 @@ int main(void) {
         if (read_line(value, sizeof(value)) == 0) break;
         insert(ht, key, value);
     }
+    
+    print_hash_table(ht);
 
     // Process search queries
     while (read_line(key, sizeof(key)) > 0) {
@@ -120,7 +122,6 @@ int main(void) {
         }
         write(1, "\n", 1);
     }
-	print_hash_table(ht);
     free_hash_table(ht);
 	gettimeofday(&end, NULL);
 	elapsed_time_sec = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
