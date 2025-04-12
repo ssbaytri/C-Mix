@@ -45,6 +45,19 @@ void print_table(char *values[])
     }
 }
 
+void free_table(char **values)
+{
+    if (!values)
+        return;
+        
+    for (size_t i = 0; i < HASH_SIZE; i++)
+    {
+        if (values[i])
+            free(values[i]);
+    }
+    free(values);
+}
+
 int main()
 {
     struct timeval start, end;
@@ -89,5 +102,7 @@ int main()
 		elapsed_time_usec += 1000000;
 	}
 	printf("Execution time: %.6f seconds and %ld microseconds\n", elapsed_time_sec, elapsed_time_usec);
+
+    free_table(values);
     return (0);
 }
