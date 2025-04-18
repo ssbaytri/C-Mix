@@ -101,8 +101,8 @@ int main()
 		elapsed_time_sec--;
 		elapsed_time_usec += 1000000;
 	}
+    free_table(values);
 	printf("Execution time: %.6f seconds and %ld microseconds\n", elapsed_time_sec, elapsed_time_usec);
 
-    free_table(values);
     return (0);
 }
