@@ -3,7 +3,7 @@ NAME=hotrace
 CC=cc
 CFLAGS=-Wall -Wextra -Werror
 
-SRCS = another.c
+SRCS = hotrace.c utils.c utils2.c utils3.c 
 OBJS = $(SRCS:.c=.o)
 
 HEADER = hotrace.h
@@ -11,7 +11,7 @@ HEADER = hotrace.h
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
 
 %.o: %.c $(HEADER)
 	$(CC) $(CFLAGS) -c $< -o $@
