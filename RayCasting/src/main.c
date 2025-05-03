@@ -25,6 +25,7 @@ void draw_square(int x, int y, int size, int color, t_game *game)
 
 void	init_game(t_game *game)
 {
+    init_player(&game->player);
 	game->mlx = mlx_init();
 	game->win = mlx_new_window(game->mlx, WIDTH, HEIGHT, "raycasting");
 	game->img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
@@ -34,6 +35,24 @@ void	init_game(t_game *game)
         &game->size_line,
         &game->endian
     );
+    mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
+}
+
+void    clear_img(t_game *game)
+{
+    for (int y = 0; y < HEIGHT; y++)
+        for (int x = 0; x < WIDTH; x++)
+            put_pixel(x, y, 0x000000, game);
+}
+
+int draw_loop(t_game *game)
+{
+    t_player *player = &game->player;
+    move_player(player);
+    clear_img(game);
+    draw_square(player->x, player->y, 20, 0xFF0000, game);
+    mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
+    return (0);
 }
 
 int main(void)
@@ -41,8 +60,9 @@ int main(void)
 	t_game game;
 
 	init_game(&game);
-	draw_square(WIDTH / 2, HEIGHT / 2, 20, 0xFF0000, &game);
-	mlx_put_image_to_window(game.mlx, game.win, game.img, 0, 0);
+    mlx_hook(game.win, 2, 1L<<0, key_press, &game.player);
+    mlx_hook(game.win, 3, 1L<<1, key_release, &game.player);
+    mlx_loop_hook(game.mlx, draw_loop, &game);
 	mlx_loop(game.mlx);
 	return (0);
 }

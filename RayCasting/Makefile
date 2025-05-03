@@ -4,7 +4,7 @@ MLX_DIR = minilibx/
 MLX_FLAGS = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
 # MLX_FLAGS = -lmlx -framework OpenGL -framework AppKit
 
-SRCS = src/main.c
+SRCS = src/main.c src/player.c
 
 OBJS = $(SRCS:.c=.o)
 
