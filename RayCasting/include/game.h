@@ -10,10 +10,19 @@
 #define WIDTH 1280
 #define HEIGHT 720
 
-#define W 119
-#define A 97
-#define S 115
-#define D 100
+// for Linux
+// #define W 119
+// #define A 97
+// #define S 115
+// #define D 100
+// #define ESC 65307
+
+// for macOS
+#define W 13
+#define A 0
+#define S 1
+#define D 2
+#define ESC 53
 
 #define PI 3.14159265358979323846
 
