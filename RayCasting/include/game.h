@@ -1,7 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include <mlx.h>
+#include "../minilibx/mlx.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>

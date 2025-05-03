@@ -28,8 +28,12 @@ void	init_game(t_game *game)
 	game->mlx = mlx_init();
 	game->win = mlx_new_window(game->mlx, WIDTH, HEIGHT, "raycasting");
 	game->img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
-
-	game->data = mlx_get_data_addr(game->img, &game->bpp, &game->size_line, &game->endian);
+	game->data = mlx_get_data_addr(
+        game->img,
+        &game->bpp,
+        &game->size_line,
+        &game->endian
+    );
 }
 
 int main(void)
@@ -37,7 +41,7 @@ int main(void)
 	t_game game;
 
 	init_game(&game);
-	draw_square(WIDTH / 2, HEIGHT / 2, 20, 0x00FF00, &game);
+	draw_square(WIDTH / 2, HEIGHT / 2, 20, 0xFF0000, &game);
 	mlx_put_image_to_window(game.mlx, game.win, game.img, 0, 0);
 	mlx_loop(game.mlx);
 	return (0);
