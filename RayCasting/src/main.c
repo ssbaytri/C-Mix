@@ -56,6 +56,16 @@ void	init_game(t_game *game)
     mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
 }
 
+void    drwa_map(t_game *game)
+{
+    char **map = game->map;
+    int color = 0X0000FF;
+    for (int y = 0; map[y]; y++)
+        for (int x = 0; map[y][x]; x++)
+            if (map[y][x] == '1')
+                draw_square(x * BLOCK, y * BLOCK, 64, color, game);
+}
+
 void    clear_img(t_game *game)
 {
     for (int y = 0; y < HEIGHT; y++)
@@ -69,6 +79,7 @@ int draw_loop(t_game *game)
     move_player(player);
     clear_img(game);
     draw_square(player->x, player->y, 20, 0xFF0000, game);
+    drwa_map(game);
     mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
     return (0);
 }
