@@ -24,4 +24,7 @@ clean:
 fclean: clean
 	rm -f $(NAME)
 
+run: $(NAME)
+	./$(NAME)
+
 re:	fclean all
