@@ -111,8 +111,8 @@ void    draw_line(t_player *player, t_game *game, float start_x, int i)
     {
         if (DEBUG)
             put_pixel(ray_x, ray_y, 0x00FF00, game);
-        ray_x += cos_angle;
-        ray_y += sin_angle;
+        ray_x += cos_angle / 10;
+        ray_y += sin_angle / 10;
     }
     if (!DEBUG)
     {
@@ -139,7 +139,7 @@ int draw_loop(t_game *game)
         drwa_map(game);
     }
 
-    float fraction = PI / 3 / WIDTH;
+    float fraction = (PI / 3) / WIDTH;
     float start_x = player->angle - PI / 6;
     int i = 0;
     while (i < WIDTH)
