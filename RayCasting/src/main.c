@@ -109,18 +109,22 @@ void    draw_line(t_player *player, t_game *game, float start_x, int i)
     float ray_y = player->y;
     while (!touch(ray_x, ray_y, game))
     {
-        // put_pixel(ray_x, ray_y, 0x00FF00, game);
+        if (DEBUG)
+            put_pixel(ray_x, ray_y, 0x00FF00, game);
         ray_x += cos_angle;
         ray_y += sin_angle;
     }
-    float dist = fixed_distance(player->x, player->y, ray_x, ray_y, game);
-    float line_height = (BLOCK / dist) * (WIDTH / 2);
-    int start_y = (HEIGHT - line_height) / 2;
-    int end_y = start_y + line_height;
-    while (start_y < end_y)
+    if (!DEBUG)
     {
-        put_pixel(i, start_y, 0x0000FF, game);
-        start_y++;
+        float dist = fixed_distance(player->x, player->y, ray_x, ray_y, game);
+        float line_height = (BLOCK / dist) * (WIDTH / 2);
+        int start_y = (HEIGHT - line_height) / 2;
+        int end_y = start_y + line_height;
+        while (start_y < end_y)
+        {
+            put_pixel(i, start_y, 0x0000FF, game);
+            start_y++;
+        }
     }
 }
 
@@ -129,8 +133,11 @@ int draw_loop(t_game *game)
     t_player *player = &game->player;
     move_player(player);
     clear_img(game);
-    // draw_square(player->x, player->y, 20, 0xFF0000, game);
-    // drwa_map(game);
+    if (DEBUG)
+    {
+        draw_square(player->x, player->y, 20, 0xFF0000, game);
+        drwa_map(game);
+    }
 
     float fraction = PI / 3 / WIDTH;
     float start_x = player->angle - PI / 6;

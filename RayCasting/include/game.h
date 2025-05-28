@@ -10,6 +10,7 @@
 #define WIDTH 1280
 #define HEIGHT 768
 #define BLOCK 64
+#define DEBUG 0
 
 // for Linux
 // #define W 119
