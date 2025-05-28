@@ -91,6 +91,15 @@ float distance(float x, float y)
     return (sqrt(x * x + y * y));
 }
 
+float fixed_distance(float x1, float y1, float x2, float y2, t_game *game)
+{
+    float delta_x = x2 - x1;
+    float delta_y = y2 - y1;
+    float angle = atan2(delta_y, delta_x) - game->player.angle;
+    float fixed_dist = distance(delta_x, delta_y) * cos(angle);
+    return (fixed_dist);
+}
+
 void    draw_line(t_player *player, t_game *game, float start_x, int i)
 {
     (void)i;
@@ -104,9 +113,8 @@ void    draw_line(t_player *player, t_game *game, float start_x, int i)
         ray_x += cos_angle;
         ray_y += sin_angle;
     }
-    float dist = distance(ray_x - player->x, ray_y - player->y);
-    float corrected_dist = dist* cos(start_x - player->angle);
-    float line_height = (BLOCK / corrected_dist) * (WIDTH / 2);
+    float dist = fixed_distance(player->x, player->y, ray_x, ray_y, game);
+    float line_height = (BLOCK / dist) * (WIDTH / 2);
     int start_y = (HEIGHT - line_height) / 2;
     int end_y = start_y + line_height;
     while (start_y < end_y)
