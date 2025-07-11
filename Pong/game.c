@@ -41,3 +41,35 @@ void draw_AIpad(paddle AIpad)
 		mvaddch(y, AIpad.pos_x, '|');
 	attroff(COLOR_PAIR(7));
 }
+
+void draw_edges(int screenWidth, int screenHeight)
+{
+	attron(COLOR_PAIR(6));
+	for(int x = 0; x < screenWidth / 2; x++)
+	{
+		mvaddch(0, x, '-');
+		mvaddch(screenHeight - 1, x, '-');
+	}
+	attroff(COLOR_PAIR(6));
+
+	attron(COLOR_PAIR(7));
+	for(int x = screenWidth / 2; x < screenWidth; x++)
+	{
+		mvaddch(0, x, '-');
+		mvaddch(screenHeight - 1, x, '-');
+	}
+	attroff(COLOR_PAIR(7));
+
+	attron(COLOR_PAIR(5));
+	for(int y = 0; y < screenHeight; y++)
+	{
+		mvaddch(y, 0, '|');
+		mvaddch(y, screenWidth - 1, '|');
+	}
+	for(int y = 0; y < screenHeight; y++)
+	{
+		// mvaddch(y, 0, '|');
+		mvaddch(y, screenWidth / 2, '|');
+	}
+	attroff(COLOR_PAIR(5));
+}
