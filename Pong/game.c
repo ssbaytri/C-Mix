@@ -1,7 +1,43 @@
 #include "game.h"
+#include <ncurses.h>
+#include <stdio.h>
 
-int main()
+int colors()
 {
-	printf("Hello world\n");
+	start_color();
+	if (has_colors() == false)
+	{
+		endwin();
+		printf("Your terminal does not support colors\n");
+		return 1;
+	}
+
+	init_pair(1, COLOR_BLUE, COLOR_YELLOW);
+	init_pair(2, COLOR_BLUE, COLOR_BLACK);
+	init_pair(3, COLOR_RED, COLOR_BLACK);
+	init_pair(4, COLOR_WHITE, COLOR_GREEN);
+	init_pair(5, COLOR_WHITE, COLOR_WHITE);
+	init_pair(6, COLOR_BLUE, COLOR_BLUE);
+	init_pair(7, COLOR_RED, COLOR_RED);
+	init_pair(8, COLOR_RED, COLOR_YELLOW);
+	init_pair(9, COLOR_BLUE, COLOR_WHITE);
+	init_pair(10, COLOR_BLACK, COLOR_BLACK);
+
 	return 0;
+}
+
+void draw_player_pad(paddle pad)
+{
+	attron(COLOR_PAIR(6));
+	for(int y = pad.pos_y; y < pad.pos_y + pad.height; y++)
+		mvaddch(y, pad.pos_x, '|');
+	attroff(COLOR_PAIR(6));
+}
+
+void draw_AIpad(paddle AIpad)
+{
+	attron(COLOR_PAIR(7));
+	for(int y = AIpad.pos_y; y < AIpad.pos_y + AIpad.height; y++)
+		mvaddch(y, AIpad.pos_x, '|');
+	attroff(COLOR_PAIR(7));
 }
