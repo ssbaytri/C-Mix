@@ -141,3 +141,47 @@ int collision(paddle *pad, paddle *AIpad, ball *ball, int screenH, int screenW, 
 
 	return 0;
 }
+
+void score(int screenH, int screenW, player *p1, player *p2)
+{
+	player player1 = *p1;
+	player player2 = *p2;
+
+	mvprintw(screenH / 4, screenW / 2 - 15, "%d", player2.point);
+	mvprintw(screenH / 5, screenW / 2 + 6, "Player 2");
+	mvprintw(screenH / 5, screenW / 2 - 15, "Player 1");
+	mvprintw(screenH / 4, screenW / 2 + 6, "%d", player1.point);
+
+	FILE *fp = fopen("score.txt", "w");
+	fscanf(fp, "%d\n", &player1.point);
+	fprintf(fp, "Player 1 score: %d\n", player1.point);
+	fscanf(fp, "%d\n", &player2.point);
+	fprintf(fp, "Player 2 score: %d\n", player2.point);
+	fclose(fp);
+}
+
+void get_input(paddle *pad, paddle *AIpad, ball *ball)
+{
+	int key = getch();
+	switch (key) {
+		case KEY_UP:
+			AIpad->pos_y -= 2;
+			break;
+		case KEY_DOWN:
+			AIpad->pos_y += 2;
+			break;
+		case KEY_RIGHT:
+			ball->dx = 1;
+			break;
+		case KEY_LEFT:
+			ball->dx = -1;
+		case 'w':
+			pad->pos_y -= 5;
+			break;
+		case 's':
+			pad->pos_y += 5;
+			break;
+	}
+}
+
+
