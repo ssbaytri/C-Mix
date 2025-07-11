@@ -76,13 +76,68 @@ void draw_edges(int screenWidth, int screenHeight)
 
 void move_ball(ball *ball)
 {
-	ball->ball_x += ball->dx;
-	ball->ball_y += ball->dy;
+	ball->x += ball->dx;
+	ball->y += ball->dy;
 }
 
 void draw_ball(ball *ball)
 {
 	attron(COLOR_PAIR(10));
-	mvaddch(ball->ball_y, ball->ball_x, '*');
+	mvaddch(ball->y, ball->x, '*');
 	attroff(COLOR_PAIR(10));
+}
+
+int collision(paddle *pad, paddle *AIpad, ball *ball, int screenH, int screenW, player *p1, player *p2)
+{
+	if (ball->x == pad->pos_x + pad->width && ball->y >= pad->pos_y && ball->y < pad->pos_y + pad->height)
+	{
+		ball->dx = -ball->dx;
+		printf("coli\n");
+	}
+
+	if (ball->x == AIpad->pos_x - ball->width && ball->y >= AIpad->pos_y && ball->y < AIpad->pos_y + AIpad->height + 1)
+		ball->dx = -ball->dx;
+
+	if (ball->x == pad->pos_x - ball->width && ball->y >= pad->pos_y && ball->y < pad->pos_y + pad->height + 1)
+		ball->dx = -ball->dx;
+
+	if (ball->y <= 0 || ball->y >= screenH - ball->height)
+	{
+		ball->dy = -ball->dy;
+		ball->dx = ball->dx;
+	}
+
+	if (ball->x <= 0 - ball->width)
+		ball->dx = -ball->dx;
+
+	if (ball->x <= 0 + ball->width)
+	{
+		ball->dx = 0;
+		ball->x = screenW / 2;
+		ball->y = screenH / 2;
+		napms(10);
+		p1->point++;
+		ball->dx = -ball->dx + 1;
+	}
+
+	if (ball->x >= screenW + ball->width)
+	{
+		ball->dx = 0;
+		ball->x = screenW / 2;
+		ball->y = screenH / 2;
+		napms(10);
+		p2->point++;
+	}
+
+	if (AIpad->pos_y < 0)
+		AIpad->pos_y = 0;
+	else if (AIpad->pos_y + AIpad->height > screenH)
+		AIpad->pos_y = screenH - AIpad->height;
+
+	if (pad->pos_y < 0)
+		pad->pos_y = 0;
+	else if(pad->pos_y + pad->height > screenH)
+		pad->pos_y = screenH - pad->height;
+
+	return 0;
 }

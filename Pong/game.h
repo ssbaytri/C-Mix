@@ -18,11 +18,12 @@ typedef struct paddle
 
 typedef struct ball
 {
-	int ball_x;
-	int ball_y;
+	int x;
+	int y;
 	int dx;
 	int dy;
-	int ball_h;
+	int width;
+	int height;
 }				ball;
 
 typedef struct player
