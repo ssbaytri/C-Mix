@@ -73,3 +73,16 @@ void draw_edges(int screenWidth, int screenHeight)
 	}
 	attroff(COLOR_PAIR(5));
 }
+
+void move_ball(ball *ball)
+{
+	ball->ball_x += ball->dx;
+	ball->ball_y += ball->dy;
+}
+
+void draw_ball(ball *ball)
+{
+	attron(COLOR_PAIR(10));
+	mvaddch(ball->ball_y, ball->ball_x, '*');
+	attroff(COLOR_PAIR(10));
+}
