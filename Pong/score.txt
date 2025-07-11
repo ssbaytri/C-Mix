@@ -1,2 +1,2 @@
-Player 1 score: 0
+Player 1 score: 1
 Player 2 score: 0

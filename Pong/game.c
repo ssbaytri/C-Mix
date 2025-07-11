@@ -216,7 +216,7 @@ void game_loop()
 		.x = screenW  / 3,
 		.y = screenH / 2,
 		.dx = 1,
-		.dy = 2
+		.dy = 1
 	};
 
 	player player1 = { .point = 0 };
@@ -241,4 +241,35 @@ void game_loop()
 	endwin();
 }
 
+int main()
+{
+    initscr();
+    curs_set(0);
+    int screenW, screenH;
+    getmaxyx(stdscr, screenH, screenW);
+    
+    // Display welcome message
+    clear();
+    attron(COLOR_PAIR(1));
+    mvprintw(screenH / 2 - 2, screenW / 2 - 15, "Welcome to PONG!");
+    attroff(COLOR_PAIR(1));
+    attron(COLOR_PAIR(2));
+    mvprintw(screenH / 2, screenW / 2 - 20, "Press any key to start the game");
+    mvprintw(screenH / 2 + 1, screenW / 2 - 25, "Use 'w' and 's' to move your paddle");
+    mvprintw(screenH / 2 + 2, screenW / 2 - 25, "Use arrow keys to control AI paddle");
+    mvprintw(screenH / 2 + 3, screenW / 2 - 25, "Press 'q' to quit");
+    attroff(COLOR_PAIR(2));
+    refresh();
+    
+    // Wait for user input to start
+    getch();
+    
+    // Start the game loop
+    game_loop();
+    
+    // Clean up ncurses
+    endwin();
+    
+    return 0;
+}
 
