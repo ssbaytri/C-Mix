@@ -175,6 +175,7 @@ void get_input(paddle *pad, paddle *AIpad, ball *ball)
 			break;
 		case KEY_LEFT:
 			ball->dx = -1;
+			break;
 		case 'w':
 			pad->pos_y -= 5;
 			break;
@@ -182,6 +183,62 @@ void get_input(paddle *pad, paddle *AIpad, ball *ball)
 			pad->pos_y += 5;
 			break;
 	}
+}
+
+void game_loop()
+{
+	initscr();
+	cbreak();
+	noecho();
+	keypad(stdscr, TRUE);
+	nodelay(stdscr, TRUE);
+
+	int screenH, screenW;
+	getmaxyx(stdscr, screenH, screenW);
+
+	paddle pad = {
+		.height = 7,
+		.width = 5,
+		.pos_y = screenH / 2 - pad.height / 2,
+		.pos_x = 10
+	};
+
+	paddle AIpad = {
+		.height = 7,
+		.width = 5,
+		.pos_y = screenH / 2 - pad.height / 2,
+		.pos_x = screenW - AIpad.width - 5
+	};
+
+	ball ball = {
+		.height = 1,
+		.width = 1,
+		.x = screenW  / 3,
+		.y = screenH / 2,
+		.dx = 1,
+		.dy = 2
+	};
+
+	player player1 = { .point = 0 };
+	player player2 = { .point = 0 };
+
+	while (1)
+	{
+		clear();
+		draw_edges(screenW, screenH);
+		draw_player_pad(pad);
+		draw_AIpad(AIpad);
+		draw_ball(&ball);
+		move_ball(&ball);
+		collision(&pad, &AIpad, &ball, screenH, screenW, &player1, &player2);
+		get_input(&pad, &AIpad, &ball);
+
+		wbkgd(stdscr, COLOR_PAIR(4));
+		score(screenH, screenW, &player1, &player2);
+		refresh();
+		napms(60);
+	}
+	endwin();
 }
 
 
