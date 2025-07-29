@@ -4,6 +4,8 @@ all:
 clean:
 	rm -f game
 
+re: clean all
+
 run: all
 	./game
 

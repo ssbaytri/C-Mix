@@ -7,6 +7,9 @@ int main(void)
     height = 600;
 
     float ball_size = 40.0f;
+    int ball_vel = 4;
+    int ball_x = width / 2;
+    int ball_y = height / 2;
 
     InitWindow(width, height, "Raylib-Ball");
 
@@ -16,8 +19,17 @@ int main(void)
     {
         BeginDrawing();
 
+        int ball_bottom = ball_y + ball_size;
+        if (ball_bottom >= height)
+        {
+            ball_vel = 0;
+            ball_y = height - ball_size;
+        }
+
+        ball_y += ball_vel;
+        ball_vel += 1;
         ClearBackground(RAYWHITE);
-        DrawCircle(width / 2, height / 2, ball_size, RED);
+        DrawCircle(ball_x, ball_y, ball_size, RED);
 
         EndDrawing();
     }
