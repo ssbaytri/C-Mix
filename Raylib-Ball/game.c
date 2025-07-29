@@ -1,5 +1,12 @@
 #include <raylib.h>
 
+bool ball_on_ground(int pos_y, int win_height, float ball_size)
+{
+    if (pos_y >= win_height - ball_size)
+        return true;
+    return false;
+}
+
 int main(void)
 {
     int width, height;
@@ -20,8 +27,7 @@ int main(void)
     {
         BeginDrawing();
 
-        int ball_bottom = ball_y + ball_size;
-        if (ball_bottom >= height)
+        if (ball_on_ground(ball_y, height, ball_size))
         {
             ball_vel = 0;
             ball_y = height - ball_size;
@@ -32,9 +38,15 @@ int main(void)
             ball_vel = -30;
         }
 
+        if (IsKeyDown(KEY_LEFT))
+            ball_x -= 4;
+
+        if (IsKeyDown(KEY_RIGHT))
+            ball_x += 4;
+
         ball_y += ball_vel;
         ball_vel += gravity;
-        
+
         ClearBackground(RAYWHITE);
         DrawCircle(ball_x, ball_y, ball_size, RED);
 
