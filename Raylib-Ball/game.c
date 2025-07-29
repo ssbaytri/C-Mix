@@ -10,6 +10,7 @@ int main(void)
     int ball_vel = 4;
     int ball_x = width / 2;
     int ball_y = height / 2;
+    int gravity = 3;
 
     InitWindow(width, height, "Raylib-Ball");
 
@@ -26,8 +27,14 @@ int main(void)
             ball_y = height - ball_size;
         }
 
+        if (IsKeyPressed(KEY_SPACE))
+        {
+            ball_vel = -30;
+        }
+
         ball_y += ball_vel;
-        ball_vel += 1;
+        ball_vel += gravity;
+        
         ClearBackground(RAYWHITE);
         DrawCircle(ball_x, ball_y, ball_size, RED);
 
