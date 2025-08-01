@@ -1,4 +1,25 @@
-#include <raylib.h>
+#include "game.h"
+
+bool ball_on_platform(Ball ball, Platform platforms[], int count)
+{
+    for (int i = 0; i < count; i++)
+    {
+        Platform platform = platforms[i];
+        Rectangle platfrom_rec = {
+            .x = platform.x,
+            .y = platform.y,
+            .width = platform.width,
+            .height = platform.height
+        };
+        Vector2 ball_pos = { .x = ball.x, .y = ball.y };
+        int ball_bottom = ball.y + ball.size;
+        if (CheckCollisionCircleRec(ball_pos, ball.size, platfrom_rec))
+        {
+            return true;
+        }
+    }
+    return false;
+}
 
 bool ball_on_ground(int pos_y, int win_height, float ball_size)
 {
@@ -10,14 +31,19 @@ bool ball_on_ground(int pos_y, int win_height, float ball_size)
 int main(void)
 {
     int width, height;
+
     width = 800;
     height = 600;
 
-    float ball_size = 40.0f;
-    int ball_vel = 4;
-    int ball_x = width / 2;
-    int ball_y = height / 2;
+    Ball ball = { .x = width / 2, .y = height / 2, .size = 40.0f, .vel = 4};
     int gravity = 3;
+
+    Platform platforms[3] = {
+    { .x = 100, .y = 400, .width = 200, .height = 20 },
+    { .x = 350, .y = 300, .width = 180, .height = 20 },
+    { .x = 600, .y = 450, .width = 160, .height = 20 }
+};
+
 
     InitWindow(width, height, "Raylib-Ball");
 
@@ -27,28 +53,35 @@ int main(void)
     {
         BeginDrawing();
 
-        if (ball_on_ground(ball_y, height, ball_size))
+        if (ball_on_platform(ball, platforms, 3))
         {
-            ball_vel = 0;
-            ball_y = height - ball_size;
+            ball.vel = 0;
+            // ball.y = height - ball.size;
         }
 
         if (IsKeyPressed(KEY_SPACE))
         {
-            ball_vel = -30;
+            ball.vel = -30;
         }
 
         if (IsKeyDown(KEY_LEFT))
-            ball_x -= 4;
+            ball.x -= 4;
 
         if (IsKeyDown(KEY_RIGHT))
-            ball_x += 4;
+            ball.x += 4;
 
-        ball_y += ball_vel;
-        ball_vel += gravity;
+        ball.y += ball.vel;
+        ball.vel += gravity;
 
         ClearBackground(RAYWHITE);
-        DrawCircle(ball_x, ball_y, ball_size, RED);
+
+        for (int i = 0; i < 3; i++) {
+            DrawRectangle(platforms[i].x, platforms[i].y,
+                  platforms[i].width, platforms[i].height, BLACK);
+        }
+
+
+        DrawCircle(ball.x, ball.y, ball.size, RED);
 
         EndDrawing();
     }
