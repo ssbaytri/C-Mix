@@ -39,11 +39,10 @@ int main(void)
     int gravity = 3;
 
     Platform platforms[3] = {
-    { .x = 100, .y = 400, .width = 200, .height = 20 },
-    { .x = 350, .y = 300, .width = 180, .height = 20 },
-    { .x = 600, .y = 450, .width = 160, .height = 20 }
-};
-
+    { .x = 0, .y = height - 20, .width = width, .height = 20 },
+    { .x = 150, .y = 500, .width = 200, .height = 20 },
+    { .x = 500, .y = 300, .width = 180, .height = 20 }
+}   ;
 
     InitWindow(width, height, "Raylib-Ball");
 
