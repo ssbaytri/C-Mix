@@ -3,7 +3,7 @@ CFLAGS = -Wall -Wextra -Werror
 
 NAME = base64
 
-src = main.c
+src = main.c ops.c
 objs = $(src:.c=.o)
 
 all: $(NAME)
