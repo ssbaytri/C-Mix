@@ -3,3 +3,4 @@
 #include <stdlib.h>
 
 
+char *encode_op(char *input);

@@ -42,7 +42,8 @@ int main(int argc, char *argv[])
     if (encode && direct_input)
     {
         printf("Encoding string: %s\n", direct_input);
-        // TODO: Encode logic here
+        char *encoded_str = encode_op(direct_input);
+        printf("Encoded stirng: %s\n", encoded_str);
     }
 
     if (decode && direct_input)
