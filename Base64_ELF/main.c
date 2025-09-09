@@ -41,15 +41,16 @@ int main(int argc, char *argv[])
 
     if (encode && direct_input)
     {
-        printf("Encoding string: %s\n", direct_input);
+        printf("Encoding string: [%s]\n", direct_input);
         char *encoded_str = encode_op(direct_input);
-        printf("Encoded stirng: %s\n", encoded_str);
+        printf("Encoded stirng: [%s]\n", encoded_str);
     }
 
     if (decode && direct_input)
     {
-        printf("Decoding string: %s\n", direct_input);
-        // TODO: Decode logic here
+        printf("Decoding string: [%s]\n", direct_input);
+        char *decode_str = decode_op(direct_input);
+        printf("Decoded string: [%s]\n", decode_str);
     }
 
 	return (0);
