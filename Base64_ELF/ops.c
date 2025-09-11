@@ -54,35 +54,53 @@ char *encode_op(char *input)
 
 char *decode_op(char *input)
 {
-	int len = strlen(input);
-	int padding = 0;
-	if (len >= 2 && input[len - 1] == '=' && input[len - 2] == '=')
-		padding = 2;
-	else if (len >= 1 && input[len - 1] == '=')
-		padding = 1;
-	int decoded_len = (len / 4) * 3 - padding;
+    // First, strip newlines and invalid chars
+    int clean_len = 0;
+    char *clean_input = malloc(strlen(input) + 1);
+    for (int k = 0; input[k]; k++)
+    {
+        if ((input[k] >= 'A' && input[k] <= 'Z') ||
+            (input[k] >= 'a' && input[k] <= 'z') ||
+            (input[k] >= '0' && input[k] <= '9') ||
+            input[k] == '+' || input[k] == '/' || input[k] == '=')
+        {
+            clean_input[clean_len++] = input[k];
+        }
+    }
+    clean_input[clean_len] = '\0';
 
-	char *result = malloc(decoded_len + 1);
-	
-	int i = 0;
-	int j = 0;
-	while (i < len)
-	{
-		int a = get_index(input[i++]);
-		int b = get_index(input[i++]);
-		int c =	input[i] == '=' ? 0 : get_index(input[i++]);
-		int d = input[i] == '=' ? 0 :get_index(input[i++]);
+    int len = clean_len;
+    int padding = 0;
+    if (len >= 2 && clean_input[len - 1] == '=' && clean_input[len - 2] == '=')
+        padding = 2;
+    else if (len >= 1 && clean_input[len - 1] == '=')
+        padding = 1;
 
-		int combined = (a << 18) | (b << 12) | (c << 6) | d;
+    int decoded_len = (len / 4) * 3 - padding;
+    char *result = malloc(decoded_len + 1);
 
-		char byte1 = (combined >> 16) & 0xFF;
-		char byte2 = (combined >> 8) & 0xFF;
-		char byte3 = combined & 0xFF;
+    int i = 0;
+    int j = 0;
+    while (i < len)
+    {
+        int a = get_index(clean_input[i++]);
+        int b = get_index(clean_input[i++]);
+        int c = clean_input[i] == '=' ? 0 : get_index(clean_input[i++]);
+        int d = clean_input[i] == '=' ? 0 : get_index(clean_input[i++]);
 
-		result[j++] = byte1;
-		if (input[i - 2] != '=') result[j++] = byte2;
-		if (input[i - 1] != '=') result[j++] = byte3;
-	}
-	result[j] = '\0';
-	return (result);
+        int combined = (a << 18) | (b << 12) | (c << 6) | d;
+
+        char byte1 = (combined >> 16) & 0xFF;
+        char byte2 = (combined >> 8) & 0xFF;
+        char byte3 = combined & 0xFF;
+
+        result[j++] = byte1;
+        if (clean_input[i - 2] != '=') result[j++] = byte2;
+        if (clean_input[i - 1] != '=') result[j++] = byte3;
+    }
+    result[j] = '\0';
+
+    free(clean_input);
+    return result;
 }
+
