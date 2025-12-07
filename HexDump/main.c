@@ -1,20 +1,32 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <ctype.h>
 
-int main()
+#define BYTES_PER_LINE 16
+
+
+
+int main(int argc, char **argv)
 {
-  int c;
-  int mem_index = 0;
-  while ((c = getchar()) != EOF)
+  if (argc < 2)
   {
-    if (mem_index % 0x10 == 0x0)
-    {
-      printf("%08x ", mem_index);
-    }
-    printf("%02x ", c);
-    mem_index++;
-    if (mem_index % 0x10 == 0x0)
-      printf("\n");
+    fprintf(stderr, "Usage: %s [filename]\n", argv[0]);
+    return EXIT_FAILURE;
   }
-  printf("\n");
-  return (0);
+
+  FILE *in_file = stdin;
+  
+  if (argc == 2)
+  {
+    in_file = fopen(argv[1], "rb");
+    if (!in_file)
+    {
+      perror("Error opening file");
+      return EXIT_FAILURE;
+    }
+  }
+
+  
 }
