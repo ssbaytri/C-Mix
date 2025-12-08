@@ -61,8 +61,8 @@ void print_format_c(const uint8_t *buffer, long offset, size_t count) {
  * @param format The format enum (b or c).
  */
 void print_format_1byte(const uint8_t *buffer, long offset, size_t count, HexdumpFormat format) {
-    // Offset is 7 digits, based on 2-byte groups (offset / 2)
-    printf("%07lx ", offset / 2); 
+    // Offset is 7 digits, based on the byte offset
+    printf("%07lx", offset); 
 
     // Print 16 units (bytes)
     for (size_t i = 0; i < BYTES_PER_LINE; ++i) {
@@ -70,19 +70,23 @@ void print_format_1byte(const uint8_t *buffer, long offset, size_t count, Hexdum
             switch (format) {
                 case FORMAT_BYTE_OCTAL_B:
                     // One-byte octal (-b)
-                    printf("%03o ", buffer[i]);
+                    printf(" %03o", buffer[i]);
                     break;
                 case FORMAT_BYTE_CHAR_C:
                     // One-byte character (-c): use C escape sequences for non-printables
                     if (isprint((unsigned char)buffer[i])) {
-                        printf(" %c ", buffer[i]);
+                        printf(" %3c", buffer[i]);
                     } else {
                         switch (buffer[i]) {
                             case '\0': printf(" \\0"); break;
-                            case '\n': printf(" \\n"); break;
-                            case '\t': printf(" \\t"); break;
-                            case '\r': printf(" \\r"); break;
-                            default:   printf("%03o", buffer[i]); break;
+                            case '\a': printf("  \\a"); break;
+                            case '\b': printf("  \\b"); break;
+                            case '\t': printf("  \\t"); break;
+                            case '\n': printf("  \\n"); break;
+                            case '\v': printf("  \\v"); break;
+                            case '\f': printf("  \\f"); break;
+                            case '\r': printf("  \\r"); break;
+                            default:   printf(" %03o", buffer[i]); break;
                         }
                     }
                     break;
@@ -91,11 +95,7 @@ void print_format_1byte(const uint8_t *buffer, long offset, size_t count, Hexdum
             }
         } else {
             // Padding for missing bytes
-            if (format == FORMAT_BYTE_CHAR_C) {
-                 printf("   ");
-            } else {
-                printf("    "); 
-            }
+            printf("    ");
         }
     }
     printf("\n");
@@ -110,8 +110,8 @@ void print_format_1byte(const uint8_t *buffer, long offset, size_t count, Hexdum
  * @param format The format enum (x, d, or o).
  */
 void print_format_2byte(const uint8_t *buffer, long offset, size_t count, HexdumpFormat format) {
-    // Offset is 7 hex digits, based on 2-byte groups
-    printf("%07lx ", offset);
+    // Offset is 7 hex digits, based on byte offset
+    printf("%07lx", offset);
 
     // Units is the number of 2-byte groups (max 8)
     for (size_t i = 0; i < 8; ++i) {
@@ -137,13 +137,13 @@ void print_format_2byte(const uint8_t *buffer, long offset, size_t count, Hexdum
             // Print the swapped unit based on the requested format
             switch (format) {
                 case FORMAT_DEFAULT_X:
-                    printf("%04x ", swapped_unit); // Hexadecimal (-x)
+                    printf("    %04x", swapped_unit); // Hexadecimal (-x)
                     break;
                 case FORMAT_TWO_BYTE_DECIMAL_D:
-                    printf("%05u ", swapped_unit); // Decimal (-d)
+                    printf("   %05u", swapped_unit); // Decimal (-d)
                     break;
                 case FORMAT_TWO_BYTE_OCTAL_O:
-                    printf("%06o ", swapped_unit); // Octal (-o)
+                    printf("  %06o", swapped_unit); // Octal (-o)
                     break;
                 default:
                     break;
@@ -151,11 +151,11 @@ void print_format_2byte(const uint8_t *buffer, long offset, size_t count, Hexdum
         } else {
             // Padding for missing units
             if (format == FORMAT_DEFAULT_X) {
-                printf("     ");
+                printf("        ");
             } else if (format == FORMAT_TWO_BYTE_DECIMAL_D) {
-                printf("      ");
+                printf("        ");
             } else if (format == FORMAT_TWO_BYTE_OCTAL_O) {
-                printf("       ");
+                printf("        ");
             }
         }
     }

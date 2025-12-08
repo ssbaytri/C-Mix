@@ -89,12 +89,12 @@ int hexdump_run(const HexdumpConfig *config) {
     }
     
     // Print the final offset line
-    if (config->format == FORMAT_CANONICAL_C) {
-        printf("%08lx\n", offset);
-    } else {
-        // All other formats use a 7-digit offset based on 2-byte groups
-        printf("%07lx\n", offset / 2); 
-    }
+	if (config->format == FORMAT_CANONICAL_C) {
+		printf("%08lx\n", offset);
+	} else {
+		// All other formats use 7-digit offset based on byte position
+		printf("%07lx\n", offset);
+	}
 
     // Close the file if it was opened
     if (input_file != stdin && input_file != NULL) {
