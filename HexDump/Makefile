@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -g
-TARGET = hexdump
-SRC = main.c
+TARGET = hexzero
+SRC = hexdump.c hexdump_utils.c
 OBJ = $(SRC:.c=.o)
 
 all: $(TARGET)
@@ -9,7 +9,7 @@ all: $(TARGET)
 $(TARGET): $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $(TARGET)
 
-%.o: %.c
+%.o: %.c hexdump.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
